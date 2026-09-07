@@ -6,11 +6,18 @@ Deno.serve(async (req) => {
   if (url.pathname === "/") {
     return Response.json({
       ok: true,
-      mensagem: "API F&A Eventos funcionando no Deno",
+      servico: "F&A Eventos API - Deno",
     });
   }
 
   if (url.pathname === "/teste-token") {
+    if (!token) {
+      return Response.json(
+        { ok: false, erro: "Token não configurado." },
+        { status: 500 },
+      );
+    }
+
     const resposta = await fetch(
       "https://api.mercadopago.com/v1/payment_methods",
       {
@@ -31,5 +38,8 @@ Deno.serve(async (req) => {
     });
   }
 
-  return new Response("Rota não encontrada", { status: 404 });
+  return Response.json(
+    { ok: false, erro: "Rota não encontrada." },
+    { status: 404 },
+  );
 });
